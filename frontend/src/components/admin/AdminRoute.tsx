@@ -13,7 +13,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
     }
 
     if (user?.role !== 'ADMIN') {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/app" replace />;
     }
 
     return <>{children}</>;

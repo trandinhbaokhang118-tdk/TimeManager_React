@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Clock, Mail, Lock, Eye, EyeOff, Phone, Sun, Moon } from 'lucide-react';
+import { Clock, Mail, Lock, Eye, EyeOff, Phone } from 'lucide-react';
 import { Button, Input } from '../components/ui';
 import { showToast } from '../components/ui/toast';
 import { useAuthStore } from '../store/auth.store';
@@ -48,18 +48,6 @@ export function Login() {
             document.documentElement.classList.add('dark');
         }
     }, []);
-
-    const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.setAttribute('data-theme', newTheme);
-        if (newTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    };
 
     // If already authenticated, redirect to home
     useEffect(() => {
@@ -141,36 +129,40 @@ export function Login() {
     };
 
     return (
-        <div className="min-h-screen flex relative bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-[#0A1628] dark:via-[#0D1B2E] dark:to-[#050A14]">
+        <div className="min-h-screen flex relative bg-gradient-to-br from-[#12C2FF] via-[#3B82F6] to-[#8B5CF6] dark:from-[#0A1628] dark:via-[#1E3A5F] dark:to-[#8B5CF6]">
+            {/* Decorative background elements - visible on all screens */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+                <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            </div>
 
-
-            <div className="flex-1 flex items-center justify-center p-8">
-                <div className="w-full max-w-md">
-                    <div className="mb-8">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#12C2FF] via-[#3B82F6] to-[#8B5CF6] flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center p-4 md:p-8 relative z-10">
+                <div className="w-full max-w-md bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 md:p-8">
+                    <div className="mb-6 md:mb-8">
+                        <div className="flex items-center gap-3 mb-4 md:mb-6">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#12C2FF] via-[#3B82F6] to-[#8B5CF6] flex items-center justify-center shadow-lg">
                                 <Clock className="w-5 h-5 text-white" />
                             </div>
                             <span className="text-2xl font-bold text-gray-900 dark:text-white">TimeManager</span>
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Chào mừng trở lại</h1>
-                        <p className="text-gray-500 dark:text-gray-600 mt-2">Đăng nhập để tiếp tục</p>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Chào mừng trở lại</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-2">Đăng nhập để tiếp tục</p>
                     </div>
 
                     {/* Login Method Tabs */}
-                    <div className="flex gap-2 mb-6 p-1 bg-gray-200 dark:bg-gray-800 rounded-lg ">
+                    <div className="flex gap-2 mb-4 md:mb-6 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
                         <button
                             type="button"
                             onClick={() => {
                                 setLoginMethod('email');
                                 setOtpSent(false);
                             }}
-                            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${loginMethod === 'email'
-                                ? 'border border-2 border-primary bg-cyan-100 dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-                                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white '
+                            className={`flex-1 py-2 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium transition-all ${loginMethod === 'email'
+                                ? 'border border-2 border-primary bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
+                                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                         >
-                            <Mail className="w-4 h-4 inline mr-1.5 text-primary-900" />
+                            <Mail className="w-4 h-4 inline mr-1.5 text-primary-600" />
                             Email
                         </button>
                         <button
@@ -179,27 +171,27 @@ export function Login() {
                                 setLoginMethod('phone');
                                 setOtpSent(false);
                             }}
-                            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${loginMethod === 'phone'
-                                ? 'border border-2 border-primary bg-cyan-100 dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                            className={`flex-1 py-2 px-3 md:px-4 rounded-md text-xs md:text-sm font-medium transition-all ${loginMethod === 'phone'
+                                ? 'border border-2 border-primary bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
                                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                         >
-                            <Phone className="w-4 h-4 inline mr-1.5 text-primary-900  " />
+                            <Phone className="w-4 h-4 inline mr-1.5 text-primary-600" />
                             Số điện thoại
                         </button>
                     </div>
 
                     {/* Email Login Form */}
                     {loginMethod === 'email' && (
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
                             <div>
-                                <label className="label">Email</label>
+                                <label className="label text-sm md:text-base pl-2">Email</label>
                                 <Input {...register('email')} type="email" placeholder="name@example.com" icon={<Mail className="w-5 h-5" />} error={!!errors.email} />
-                                {errors.email && <p className="mt-1.5 text-sm text-red-500">{errors.email.message}</p>}
+                                {errors.email && <p className="mt-1.5 text-xs md:text-sm text-red-500">{errors.email.message}</p>}
                             </div>
 
                             <div>
-                                <label className="label">Mật khẩu</label>
+                                <label className="label text-sm md:text-base">Mật khẩu</label>
                                 <Input
                                     {...register('password')}
                                     type={showPassword ? 'text' : 'password'}
@@ -212,7 +204,7 @@ export function Login() {
                                     }
                                     error={!!errors.password}
                                 />
-                                {errors.password && <p className="mt-1.5 text-sm text-red-500">{errors.password.message}</p>}
+                                {errors.password && <p className="mt-1.5 text-xs md:text-sm text-red-500">{errors.password.message}</p>}
                             </div>
 
                             <Button type="submit" className="w-full" size="lg" loading={isSubmitting}>
@@ -277,26 +269,26 @@ export function Login() {
                         </form>
                     )}
 
-                    <p className="mt-6 text-center text-sm text-gray-500">
+                    <p className="mt-4 md:mt-6 text-center text-xs md:text-sm text-gray-600 dark:text-gray-400">
                         Chưa có tài khoản? <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">Đăng ký</Link>
                     </p>
 
                     {/* Divider */}
-                    <div className="relative my-6">
+                    <div className="relative my-4 md:my-6">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-gray-200 text-black/90 rounded-md dark:bg-gray-900 ">Hoặc đăng nhập với</span>
+                        <div className="relative flex justify-center text-xs md:text-sm">
+                            <span className="px-2 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400">Hoặc đăng nhập với</span>
                         </div>
                     </div>
 
                     {/* Social Login Buttons */}
-                    <div className="space-y-3 mb-6">
+                    <div className="space-y-2 md:space-y-3">
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full"
+                            className="w-full text-sm md:text-base"
                             size="lg"
                             onClick={() => handleSocialLogin('google')}
                         >
@@ -323,7 +315,7 @@ export function Login() {
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full"
+                            className="w-full text-sm md:text-base"
                             size="lg"
                             onClick={() => handleSocialLogin('facebook')}
                         >
@@ -332,6 +324,17 @@ export function Login() {
                             </svg>
                             Đăng nhập với Facebook
                         </Button>
+                    </div>
+
+                    {/* Demo accounts hint - only on mobile */}
+                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg lg:hidden">
+                        <p className="text-xs text-center text-gray-600 dark:text-gray-400 mb-2">
+                            <strong>Demo accounts:</strong>
+                        </p>
+                        <p className="text-xs text-center text-gray-600 dark:text-gray-400">
+                            demo@timemanager.com / demo123<br />
+                            admin@timemanager.com / admin123
+                        </p>
                     </div>
                 </div>
             </div>

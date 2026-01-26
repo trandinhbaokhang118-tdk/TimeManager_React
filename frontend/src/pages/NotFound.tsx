@@ -21,7 +21,7 @@ export function NotFound() {
                     >
                         Go back
                     </Button>
-                    <Link to="/">
+                    <Link to="/app">
                         <Button leftIcon={<Home className="w-4 h-4" />}>
                             Go to Dashboard
                         </Button>
