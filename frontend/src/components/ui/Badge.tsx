@@ -3,18 +3,25 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
 const badgeVariants = cva(
-    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+    'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold transition-all duration-200',
     {
         variants: {
             variant: {
-                default: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-                primary: 'bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300',
-                secondary: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
-                success: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
-                warning: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300',
-                danger: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
-                info: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-                outline: 'border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300',
+                default: 'bg-[var(--surface-3)] text-[var(--text-2)] border border-[color:var(--border)]',
+
+                primary: 'bg-[var(--surface-highlight)] text-[var(--primary)] border border-[color:var(--surface-highlight-border)]',
+
+                secondary: 'bg-purple-100 text-purple-700 border border-purple-200 dark:bg-purple-500/20 dark:text-purple-400 dark:border-purple-500/30',
+
+                success: 'bg-green-100 text-green-700 border border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/30',
+
+                warning: 'bg-amber-100 text-amber-700 border border-amber-200 dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-500/30',
+
+                danger: 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/20 dark:text-red-400 dark:border-red-500/30',
+
+                info: 'bg-blue-100 text-blue-700 border border-blue-200 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30',
+
+                outline: 'border border-[color:var(--border)] text-[var(--text-2)] bg-transparent',
             },
         },
         defaultVariants: {

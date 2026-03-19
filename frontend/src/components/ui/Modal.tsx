@@ -21,7 +21,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
 
     return (
         <Transition show={isOpen} as={Fragment}>
-            <Dialog onClose={onClose} className="relative z-50">
+            <Dialog onClose={onClose} className="relative z-[100]">
                 <TransitionChild
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -31,7 +31,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
+                    <div className="fixed inset-0 z-[99] bg-black/60 backdrop-blur-sm" aria-hidden="true" />
                 </TransitionChild>
 
                 <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -46,26 +46,41 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
                     >
                         <DialogPanel
                             className={clsx(
-                                'w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl',
-                                'max-h-[90vh] overflow-y-auto',
+                                'w-full rounded-2xl p-6',
+                                'bg-[var(--surface-2)]',
+                                'border border-[color:var(--border)]',
+                                'backdrop-blur-xl',
+                                'shadow-[var(--shadow-lg)]',
                                 sizes[size]
                             )}
                         >
+                            {/* Header */}
                             {title && (
-                                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                                    <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div className="flex items-center justify-between mb-4">
+                                    <DialogTitle className="text-lg font-semibold text-[var(--text)]">
                                         {title}
                                     </DialogTitle>
                                     <button
                                         onClick={onClose}
-                                        className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                        aria-label="Close modal"
+                                        className="rounded-xl p-2 text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200"
                                     >
-                                        <X className="w-5 h-5 text-gray-500" />
+                                        <X className="h-5 w-5" />
                                     </button>
                                 </div>
                             )}
-                            <div className="p-6">{children}</div>
+
+                            {/* Content */}
+                            {children}
+
+                            {/* Close button if no title */}
+                            {!title && (
+                                <button
+                                    onClick={onClose}
+                                    className="absolute right-4 top-4 rounded-xl p-2 text-[var(--text-3)] hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            )}
                         </DialogPanel>
                     </TransitionChild>
                 </div>

@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
-            className={cn('animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800', className)}
+            className={cn('animate-pulse rounded-xl skeleton', className)}
             {...props}
         />
     );
@@ -43,7 +43,7 @@ function SkeletonTable({ rows = 5, cols = 4, className }: { rows?: number; cols?
     return (
         <div className={cn('space-y-3', className)}>
             {/* Header */}
-            <div className="flex gap-4 p-3 border-b border-gray-200 dark:border-gray-800">
+            <div className="flex gap-4 border-b border-[color:var(--divider)] p-3">
                 {Array.from({ length: cols }).map((_, i) => (
                     <Skeleton key={i} className="h-4 flex-1" />
                 ))}
