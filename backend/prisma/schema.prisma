@@ -2,7 +2,7 @@
 // https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +28,27 @@ enum TaskPriority {
   HIGH
 }
 
+// Subscription Enums
+enum SubscriptionTier {
+  FREE
+  PRO
+  PLUS
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  TRIALING
+}
+
+enum PaymentProvider {
+  STRIPE
+  VNPAY
+  MOMO
+  ZALOPAY
+}
+
 // Models
 model User {
   id            String         @id @default(uuid())
@@ -46,6 +67,14 @@ model User {
   timeBlocks    TimeBlock[]
   reminders     Reminder[]
   notifications Notification[]
+
+  // Subscription
+  subscription Subscription?
+
+  // Fitness
+  fitnessProfile  FitnessProfile?
+  exercises       Exercise[]
+  dailyActivities DailyActivity[]
 
   @@map("users")
 }
@@ -161,4 +190,126 @@ model Notification {
   @@index([readAt])
   @@index([createdAt])
   @@map("notifications")
+}
+
+// Subscription Models
+model Subscription {
+  id              String             @id @default(uuid())
+  userId          String             @unique
+  tier            SubscriptionTier   @default(FREE)
+  status          SubscriptionStatus @default(ACTIVE)
+  provider        PaymentProvider?
+  providerSubId   String?
+  providerCustomerId String?
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  canceledAt      DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model SubscriptionPlan {
+  id          String           @id @default(uuid())
+  tier        SubscriptionTier @unique
+  name        String
+  description String?
+  priceVND    Int
+  priceUSD    Int
+  interval    String           @default("month")
+  features    Json
+  isActive    Boolean          @default(true)
+  sortOrder   Int              @default(0)
+  createdAt   DateTime         @default(now())
+
+  @@map("subscription_plans")
+}
+
+// Fitness Models
+model FitnessProfile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  height        Float?
+  weight        Float?
+  goalWeight    Float?
+  activityLevel String   @default("moderate")
+  stepGoal      Int      @default(10000)
+  calorieGoal   Int      @default(500)
+  healthConnect Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("fitness_profiles")
+}
+
+model Exercise {
+  id              String   @id @default(uuid())
+  userId          String
+  name            String
+  category        String
+  subCategory     String?
+  duration        Int
+  distance        Float?
+  steps           Int?
+  caloriesBurned  Int?
+  avgHeartRate    Int?
+  avgPace         Float?
+  intensity      String   @default("moderate")
+  notes           String?
+  performedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route           GpsRoute?
+
+  @@index([userId])
+  @@index([performedAt])
+  @@map("exercises")
+}
+
+model GpsRoute {
+  id            String   @id @default(uuid())
+  exerciseId    String   @unique
+  polyline      String?
+  startLat      Float
+  startLng      Float
+  endLat        Float
+  endLng        Float
+  totalDistance Float
+  elevationGain Float?
+  duration      Int?     // seconds
+
+  exercise      Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@map("gps_routes")
+}
+
+model DailyActivity {
+  id            String    @id @default(uuid())
+  userId        String
+  date          DateTime  @db.Date
+  steps         Int       @default(0)
+  distance      Float     @default(0)
+  calories      Int       @default(0)
+  activeMinutes Int       @default(0)
+  sleepMinutes  Int?
+  heartRateAvg  Int?
+  syncedAt      DateTime?
+  source        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+  @@map("daily_activities")
 }

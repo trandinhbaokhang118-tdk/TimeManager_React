@@ -83,10 +83,25 @@ export class AuthController {
     @Get('google/callback')
     @ApiOperation({ summary: 'Google OAuth callback' })
     async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
-        const code = req.query.code as string;
-        const result = await this.authService.googleLogin(code);
-        // Redirect to frontend with token
-        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.accessToken}`);
+        try {
+            const code = req.query.code as string;
+            const error = req.query.error as string;
+
+            if (error) {
+                return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=google_auth_failed`);
+            }
+
+            if (!code) {
+                return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=google_auth_failed`);
+            }
+
+            const result = await this.authService.googleLogin(code);
+            // Redirect to frontend with token
+            res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.accessToken}`);
+        } catch (error) {
+            console.error('Google OAuth error:', error);
+            res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=google_auth_failed`);
+        }
     }
 
     @Get('facebook')
@@ -99,9 +114,24 @@ export class AuthController {
     @Get('facebook/callback')
     @ApiOperation({ summary: 'Facebook OAuth callback' })
     async facebookAuthCallback(@Req() req: Request, @Res() res: Response) {
-        const code = req.query.code as string;
-        const result = await this.authService.facebookLogin(code);
-        // Redirect to frontend with token
-        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.accessToken}`);
+        try {
+            const code = req.query.code as string;
+            const error = req.query.error as string;
+
+            if (error) {
+                return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=facebook_auth_failed`);
+            }
+
+            if (!code) {
+                return res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=facebook_auth_failed`);
+            }
+
+            const result = await this.authService.facebookLogin(code);
+            // Redirect to frontend with token
+            res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${result.accessToken}`);
+        } catch (error) {
+            console.error('Facebook OAuth error:', error);
+            res.redirect(`${process.env.FRONTEND_URL}/auth/callback?error=facebook_auth_failed`);
+        }
     }
 }

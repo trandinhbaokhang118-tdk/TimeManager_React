@@ -13,6 +13,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { AdminModule } from './admin/admin.module';
 import { AIChatModule } from './ai-chat/ai-chat.module';
+import { PaymentsModule } from './payments/payments.module';
+import { FitnessModule } from './fitness/fitness.module';
+import { GpsModule } from './gps/gps.module';
 import { HealthController } from './health/health.controller';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
@@ -36,6 +39,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
         SchedulerModule,
         AdminModule,
         AIChatModule,
+        PaymentsModule,
+        FitnessModule,
+        GpsModule,
     ],
     controllers: [HealthController],
     providers: [
