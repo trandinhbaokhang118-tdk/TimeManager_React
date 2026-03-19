@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Filter, Download } from 'lucide-react';
-import { Button } from '../../components/ui';
+import { Filter, Download, Activity, Clock, User, FileText, Shield } from 'lucide-react';
+import '../../admin-theme.css';
 
 interface Log {
     id: string;
@@ -15,6 +15,7 @@ interface Log {
 export function ActivityLogs() {
     const [logs, setLogs] = useState<Log[]>([]);
     const [filter, setFilter] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         // Mock data
@@ -46,95 +47,142 @@ export function ActivityLogs() {
                 timestamp: new Date(Date.now() - 7200000).toISOString(),
                 ipAddress: '192.168.1.3',
             },
+            {
+                id: '4',
+                userId: '4',
+                userName: 'Mike Johnson',
+                action: 'DELETE',
+                details: 'Xóa công việc: "Task cũ"',
+                timestamp: new Date(Date.now() - 10800000).toISOString(),
+                ipAddress: '192.168.1.4',
+            },
+            {
+                id: '5',
+                userId: '5',
+                userName: 'Sarah Lee',
+                action: 'LOGIN',
+                details: 'Đăng nhập thất bại',
+                timestamp: new Date(Date.now() - 14400000).toISOString(),
+                ipAddress: '192.168.1.5',
+            },
         ]);
     }, []);
+
+    const filteredLogs = logs.filter(log =>
+        log.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        log.action.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        log.details.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const getActionIcon = (action: string) => {
+        switch (action) {
+            case 'LOGIN': return <Shield className="w-4 h-4" />;
+            case 'CREATE_TASK': return <FileText className="w-4 h-4" />;
+            case 'UPDATE_PROFILE': return <User className="w-4 h-4" />;
+            case 'DELETE': return <Activity className="w-4 h-4" />;
+            default: return <Activity className="w-4 h-4" />;
+        }
+    };
 
     const getActionColor = (action: string) => {
         switch (action) {
             case 'LOGIN':
-                return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+                return 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 border-green-200 dark:border-green-500/30';
             case 'CREATE_TASK':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+                return 'bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400 border-cyan-200 dark:border-cyan-500/30';
             case 'UPDATE_PROFILE':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+                return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/30';
             case 'DELETE':
-                return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+                return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 border-red-200 dark:border-red-500/30';
             default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
+                return 'bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-400 border-gray-200 dark:border-gray-500/30';
         }
     };
 
     return (
-        <div className="space-y-6">
+        <div className="admin-theme admin-container p-6 md:p-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-[var(--text)]">Nhật ký hoạt động</h1>
-                    <p className="text-[var(--text-2)] mt-2">Theo dõi mọi hoạt động trong hệ thống</p>
+                    <h1 className="admin-title mb-2">Nhật ký hoạt động</h1>
+                    <p className="admin-title-sub">Theo dõi mọi hoạt động trong hệ thống</p>
                 </div>
-                <Button variant="outline">
-                    <Download className="w-5 h-5 mr-2" />
+                <button className="admin-btn admin-btn-primary">
+                    <Download className="w-5 h-5" />
                     Xuất báo cáo
-                </Button>
+                </button>
             </div>
 
             {/* Filters */}
-            <div className="bg-[var(--surface-1)] border border-[var(--border)] rounded-xl p-4">
-                <div className="flex items-center gap-4">
-                    <Filter className="w-5 h-5 text-[var(--text-2)]" />
-                    <select
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        className="px-4 py-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)]"
-                    >
-                        <option value="all">Tất cả hoạt động</option>
-                        <option value="login">Đăng nhập</option>
-                        <option value="task">Công việc</option>
-                        <option value="profile">Hồ sơ</option>
-                    </select>
+            <div className="admin-glass-card p-4 mb-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="admin-input"
+                        />
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Filter className="w-5 h-5" style={{ color: 'var(--admin-text-muted)' }} />
+                        <select
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                            className="admin-select"
+                        >
+                            <option value="all">Tất cả hoạt động</option>
+                            <option value="login">Đăng nhập</option>
+                            <option value="task">Công việc</option>
+                            <option value="profile">Hồ sơ</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             {/* Logs Table */}
-            <div className="bg-[var(--surface-1)] border border-[var(--border)] rounded-xl overflow-hidden">
+            <div className="admin-glass-card overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-[var(--surface-2)] border-b border-[var(--border)]">
+                    <table className="admin-table">
+                        <thead>
                             <tr>
-                                <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text)]">Thời gian</th>
-                                <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text)]">Người dùng</th>
-                                <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text)]">Hành động</th>
-                                <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text)]">Chi tiết</th>
-                                <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text)]">IP Address</th>
+                                <th>Thời gian</th>
+                                <th>Người dùng</th>
+                                <th>Hành động</th>
+                                <th>Chi tiết</th>
+                                <th>IP Address</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-[var(--border)]">
-                            {logs.map((log) => (
-                                <tr key={log.id} className="hover:bg-[var(--surface-2)] transition-colors">
-                                    <td className="px-6 py-4 text-sm text-[var(--text-2)]">
-                                        {new Date(log.timestamp).toLocaleString('vi-VN')}
-                                    </td>
-                                    <td className="px-6 py-4">
+                        <tbody>
+                            {filteredLogs.map((log) => (
+                                <tr key={log.id}>
+                                    <td>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center">
-                                                <span className="text-xs font-medium text-primary-600">
-                                                    {log.userName.charAt(0).toUpperCase()}
-                                                </span>
-                                            </div>
-                                            <span className="text-sm font-medium text-[var(--text)]">{log.userName}</span>
+                                            <Clock className="w-4 h-4" style={{ color: 'var(--admin-neon-primary)', opacity: 0.5 }} />
+                                            {new Date(log.timestamp).toLocaleString('vi-VN')}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="admin-avatar">
+                                                {log.userName.charAt(0).toUpperCase()}
+                                            </div>
+                                            <span>{log.userName}</span>
+                                        </div>
+                                    </td>
+                                    <td>
                                         <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getActionColor(
-                                                log.action
-                                            )}`}
+                                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${getActionColor(log.action)}`}
                                         >
+                                            {getActionIcon(log.action)}
                                             {log.action}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-[var(--text-2)]">{log.details}</td>
-                                    <td className="px-6 py-4 text-sm text-[var(--text-3)] font-mono">{log.ipAddress}</td>
+                                    <td>{log.details}</td>
+                                    <td>
+                                        <span className="font-mono">{log.ipAddress}</span>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
