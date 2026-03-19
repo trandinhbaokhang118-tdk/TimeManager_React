@@ -33,7 +33,6 @@ export function Login() {
     const [loginMethod, setLoginMethod] = useState<LoginMethod>('email');
     const [otpSent, setOtpSent] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const { login, isAuthenticated } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
@@ -42,7 +41,6 @@ export function Login() {
     // Load theme from localStorage
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' || 'light';
-        setTheme(savedTheme);
         document.documentElement.setAttribute('data-theme', savedTheme);
         if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
@@ -81,8 +79,6 @@ export function Login() {
     });
 
     const onSubmit = async (data: LoginForm) => {
-        <Input className="text-black dark:text-black placeholder:text-black/60 dark:placeholder:text-black/60" />
-
         try {
             const response = await api.post<ApiResponse<AuthResponse>>('/auth/login', data);
             const { accessToken, refreshToken, user } = response.data.data;
@@ -326,13 +322,13 @@ export function Login() {
                         </Button>
                     </div>
 
-                    {/* Demo accounts hint - only on mobile */}
-                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg lg:hidden">
+                    {/* Demo accounts hint */}
+                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-xs text-center text-gray-600 dark:text-gray-400 mb-2">
-                            <strong>Demo accounts:</strong>
+                            <strong>Tài khoản demo:</strong>
                         </p>
                         <p className="text-xs text-center text-gray-600 dark:text-gray-400">
-                            demo@timemanager.com / demo123<br />
+                            user@demo.com / user123<br />
                             admin@timemanager.com / admin123
                         </p>
                     </div>

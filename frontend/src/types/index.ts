@@ -1,11 +1,17 @@
 // User types
+export type SubscriptionTier = 'FREE' | 'PRO' | 'PLUS';
+export type SubscriptionStatus = 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'TRIALING';
+export type PaymentProvider = 'STRIPE' | 'VNPAY' | 'MOMO' | 'ZALOPAY';
+
 export interface User {
     id: string;
     email: string;
     name: string;
+    avatar?: string;
     role: 'USER' | 'ADMIN';
     createdAt: string;
     updatedAt: string;
+    subscription?: Subscription;
 }
 
 // Auth types
@@ -165,4 +171,128 @@ export interface TaskQueryParams {
 export interface TimeBlockQueryParams {
     startDate: string;
     endDate: string;
+}
+
+// Subscription types
+export interface Subscription {
+    id?: string;
+    userId?: string;
+    tier: SubscriptionTier;
+    status: SubscriptionStatus;
+    provider?: PaymentProvider;
+    providerSubId?: string;
+    currentPeriodStart?: string;
+    currentPeriodEnd?: string;
+    canceledAt?: string;
+}
+
+export interface SubscriptionPlan {
+    id: string;
+    tier: SubscriptionTier;
+    name: string;
+    description?: string;
+    priceVND: number;
+    priceUSD: number;
+    interval: string;
+    features: string[];
+    isActive: boolean;
+    sortOrder: number;
+}
+
+export interface CreateCheckoutRequest {
+    tier: SubscriptionTier;
+    provider?: PaymentProvider;
+}
+
+// Fitness types
+export interface FitnessProfile {
+    id: string;
+    userId: string;
+    height?: number;
+    weight?: number;
+    goalWeight?: number;
+    activityLevel: string;
+    stepGoal: number;
+    calorieGoal: number;
+    healthConnect: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Exercise {
+    id: string;
+    userId: string;
+    name: string;
+    category: string;
+    subCategory?: string;
+    duration: number;
+    distance?: number;
+    steps?: number;
+    caloriesBurned?: number;
+    avgHeartRate?: number;
+    avgPace?: number;
+    intensity: string;
+    notes?: string;
+    performedAt: string;
+    route?: GpsRoute;
+}
+
+export interface DailyActivity {
+    id: string;
+    userId: string;
+    date: string;
+    steps: number;
+    distance: number;
+    calories: number;
+    activeMinutes: number;
+    sleepMinutes?: number;
+    heartRateAvg?: number;
+    syncedAt?: string;
+    source?: string;
+}
+
+export interface WeeklyStats {
+    totalSteps: number;
+    totalDistance: number;
+    totalCalories: number;
+    totalActiveMinutes: number;
+    avgHeartRate: number;
+    days: Array<{
+        date: string;
+        steps: number;
+        distance: number;
+        calories: number;
+        activeMinutes: number;
+    }>;
+}
+
+// GPS types
+export interface GpsRoute {
+    id: string;
+    exerciseId: string;
+    polyline?: string;
+    startLat: number;
+    startLng: number;
+    endLat: number;
+    endLng: number;
+    totalDistance: number;
+    elevationGain?: number;
+    duration?: number;
+    path?: Array<{ lat: number; lng: number }>;
+}
+
+export interface TrackingSession {
+    sessionId: string;
+    status: string;
+    startLocation?: { lat: number; lng: number };
+    locationCount?: number;
+    totalDistance?: number;
+    summary?: {
+        duration: number;
+        distance: number;
+        caloriesBurned: number;
+        avgPace: number;
+        startLocation: { lat: number; lng: number };
+        endLocation: { lat: number; lng: number };
+    };
 }

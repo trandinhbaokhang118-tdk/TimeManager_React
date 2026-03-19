@@ -17,12 +17,13 @@ export function NotFound() {
                     <Button
                         variant="secondary"
                         onClick={() => window.history.back()}
-                        leftIcon={<ArrowLeft className="w-4 h-4" />}
                     >
+                        <ArrowLeft className="w-4 h-4" />
                         Go back
                     </Button>
                     <Link to="/app">
-                        <Button leftIcon={<Home className="w-4 h-4" />}>
+                        <Button>
+                            <Home className="w-4 h-4" />
                             Go to Dashboard
                         </Button>
                     </Link>

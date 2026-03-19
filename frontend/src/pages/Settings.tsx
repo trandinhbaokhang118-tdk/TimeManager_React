@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -17,7 +17,6 @@ import { Button, Input, UserAvatar } from '../components/ui';
 import { showToast } from '../components/ui/toast';
 import { useAuthStore } from '../store/auth.store';
 import { useDarkMode } from '../hooks/useDarkMode';
-import { cn } from '../lib/utils';
 import api from '../services/api';
 
 // Validation schemas
@@ -41,7 +40,6 @@ type PasswordFormData = z.infer<typeof passwordSchema>;
 export function Settings() {
     const { user, setUser } = useAuthStore();
     const { darkMode, toggleDarkMode } = useDarkMode();
-    const queryClient = useQueryClient();
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
 

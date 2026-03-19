@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Clock, CheckCircle, Calendar, Timer, Sparkles, TrendingUp, Users, Shield, ArrowRight, Menu, X } from 'lucide-react';
+import { Clock, CheckCircle, Calendar, Timer, Sparkles, TrendingUp, Shield, ArrowRight, Menu, X } from 'lucide-react';
 import { Button } from '../components/ui';
 import { useState, useEffect } from 'react';
 

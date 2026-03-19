@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { clsx } from 'clsx';
 import { PageHeader } from '../components/layout';
 import { Button, Input, Modal } from '../components/ui';
-import { ConfirmDialog } from '../components/ui/confirm-dialog';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { timeBlocksService } from '../services/time-blocks.service';
 import type { TimeBlock, CreateTimeBlockRequest } from '../types';
 
@@ -319,10 +319,10 @@ export function Calendar() {
             {/* Delete Confirmation */}
             <ConfirmDialog
                 open={!!deleteBlock}
-                onOpenChange={() => setDeleteBlock(null)}
+                onClose={() => setDeleteBlock(null)}
                 onConfirm={() => deleteBlock && deleteMutation.mutate(deleteBlock.id)}
                 title="Delete Time Block"
-                description={`Are you sure you want to delete "${deleteBlock?.title}"? This action cannot be undone.`}
+                message={`Are you sure you want to delete "${deleteBlock?.title}"? This action cannot be undone.`}
                 confirmText="Delete"
                 variant="danger"
                 loading={deleteMutation.isPending}

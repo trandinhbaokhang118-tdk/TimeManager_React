@@ -18,6 +18,8 @@ export function useDarkMode() {
         } else {
             root.classList.remove('dark');
         }
+        root.dataset.theme = darkMode ? 'dark' : 'light';
+        root.style.colorScheme = darkMode ? 'dark' : 'light';
         localStorage.setItem('darkMode', String(darkMode));
     }, [darkMode]);
 

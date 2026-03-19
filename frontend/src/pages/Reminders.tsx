@@ -85,7 +85,8 @@ export function Reminders() {
                 title="Reminders"
                 description="Set reminders for important tasks"
                 actions={
-                    <Button onClick={openModal} leftIcon={<Plus className="w-4 h-4" />}>
+                    <Button onClick={openModal}>
+                        <Plus className="w-4 h-4" />
                         New Reminder
                     </Button>
                 }
@@ -161,18 +162,22 @@ export function Reminders() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            label="Date"
-                            type="date"
-                            {...register('date')}
-                            error={errors.date?.message}
-                        />
-                        <Input
-                            label="Time"
-                            type="time"
-                            {...register('time')}
-                            error={errors.time?.message}
-                        />
+                        <div>
+                            <label className="label">Date</label>
+                            <Input
+                                type="date"
+                                {...register('date')}
+                                error={errors.date?.message}
+                            />
+                        </div>
+                        <div>
+                            <label className="label">Time</label>
+                            <Input
+                                type="time"
+                                {...register('time')}
+                                error={errors.time?.message}
+                            />
+                        </div>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4">
@@ -188,7 +193,7 @@ export function Reminders() {
 
             {/* Delete Confirmation */}
             <ConfirmDialog
-                isOpen={!!deleteReminder}
+                open={!!deleteReminder}
                 onClose={() => setDeleteReminder(null)}
                 onConfirm={() => deleteReminder && deleteMutation.mutate(deleteReminder.id)}
                 title="Delete Reminder"

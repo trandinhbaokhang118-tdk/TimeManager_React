@@ -79,7 +79,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
         <>
             <header
                 className={cn(
-                    'fixed top-0 right-0 z-30 h-16 bg-[var(--surface-1)] backdrop-blur-xl',
+                    'fixed top-0 right-0 z-30 h-16 bg-[var(--panel-glass)] backdrop-blur-2xl',
                     'border-b border-[var(--border)]',
                     'transition-all duration-300',
                     sidebarCollapsed ? 'left-[72px]' : 'left-64',
@@ -92,7 +92,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                         {/* Mobile menu button */}
                         <button
                             onClick={onMenuClick}
-                            className="md:hidden p-2 rounded-lg text-[var(--text-2)] hover:bg-gray-100 dark:hover:bg-gray-800"
+                            className="rounded-lg p-2 text-[var(--text-2)] transition-colors hover:bg-[var(--surface-3)] hover:text-[var(--text)] md:hidden"
                         >
                             <Menu className="w-5 h-5" />
                         </button>
@@ -102,16 +102,14 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                             onClick={() => setCommandOpen(true)}
                             className={cn(
                                 'flex items-center gap-2 px-3 py-2 rounded-lg',
-                                'bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-2)]',
-                                'hover:bg-blue-200 hover:text-black/90 dark:hover:bg-blue-100 transition-colors',
+                                'bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-2)] shadow-[var(--shadow-sm)]',
+                                'hover:bg-[var(--surface-3)] hover:text-[var(--text)] transition-colors',
                                 'w-64 max-md:w-auto'
                             )}
                         >
                             <Search className="w-4 h-4" />
                             <span className="text-sm max-md:hidden">Tìm kiếm...</span>
-                            <kbd
-                                className="ml-auto hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-white bg-gradient-to-r from-[#12C2FF] via-[#3B82F6] to-[#8B5CF6] rounded"
-                            >
+                            <kbd className="ml-auto hidden items-center gap-1 rounded border border-[var(--surface-highlight-border)] bg-[var(--surface-highlight)] px-1.5 py-0.5 text-xs font-medium text-[var(--primary)] md:inline-flex">
                                 <Command className="w-3 h-3" />K
                             </kbd>
                         </button>
@@ -120,7 +118,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                     {/* Right side */}
                     <div className="flex items-center gap-2">
                         {/* Home link */}
-                        <Link to="/">
+                        <Link to="/app">
                             <Button
                                 size="sm"
                                 variant="ghost"
@@ -136,8 +134,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                         <Button
                             size="sm"
                             onClick={() => setQuickAddOpen(true)}
-                            className="gap-1.5 bg-blue-500 text-white hover:bg-blue-600"
-
+                            className="gap-1.5"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="max-sm:hidden">Thêm nhanh</span>
@@ -146,7 +143,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                         {/* Notifications */}
                         <button
                             onClick={() => navigate('/app/notifications')}
-                            className="relative p-2 rounded-lg text-[var(--text-2)] hover:bg-blue-500 dark:hover:bg-ble-500 text-gray-900 transition-colors"
+                            className="relative rounded-lg p-2 text-[var(--text-2)] transition-colors hover:bg-[var(--surface-3)] hover:text-[var(--text)]"
                         >
                             <Bell className="w-5 h-5" />
                             {unreadCount > 0 && (
@@ -159,7 +156,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                         {/* Dark mode toggle */}
                         <button
                             onClick={toggleDarkMode}
-                            className="p-2 rounded-lg text-[var(--text-2)] hover:bg-blue-500 dark:hover:bg-ble-500 text-gray-900 transition-colors"
+                            className="rounded-lg p-2 text-[var(--text-2)] transition-colors hover:bg-[var(--surface-3)] hover:text-[var(--text)]"
                         >
                             {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                         </button>
@@ -167,18 +164,18 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                         {/* User menu */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="flex items-center gap-2 p-1 rounded-lg dark:hover:bg-gray-900 transition-colors dark:text-gray-900">
+                                <button className="flex items-center gap-2 rounded-lg p-1 text-[var(--text)] transition-colors hover:bg-[var(--surface-3)]">
                                     <UserAvatar name={user?.name || 'User'} size="sm" />
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56 dark:text-gray-900">
+                            <DropdownMenuContent align="end" className="w-56">
                                 <DropdownMenuLabel>
                                     <div className="flex flex-col">
-                                        <span className="font-medium text-black/90">
+                                        <span className="font-medium text-[var(--text)]">
                                             {user?.name || "User"}
                                         </span>
 
-                                        <span className="text-xs text-black/90">
+                                        <span className="text-xs text-[var(--text-2)]">
                                             {user?.email}
                                         </span>
                                     </div>
@@ -193,7 +190,7 @@ export function Header({ sidebarCollapsed, onMenuClick }: HeaderProps) {
                                     Cài đặt
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => navigate('/')}>
+                                <DropdownMenuItem onClick={() => navigate('/app')}>
                                     <Home className="w-4 h-4 mr-2" />
                                     Về trang chủ
                                 </DropdownMenuItem>

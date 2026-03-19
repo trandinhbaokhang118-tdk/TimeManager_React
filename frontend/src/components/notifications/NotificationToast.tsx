@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Bell } from 'lucide-react';
 import { showToast } from '../ui/toast';
 import { useNotificationStore } from '../../store/notification.store';
 import { notificationsService } from '../../services/notifications.service';

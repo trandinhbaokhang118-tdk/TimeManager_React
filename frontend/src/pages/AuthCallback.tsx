@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/auth.store';
 import { showToast } from '../components/ui/toast';
-import api from '../services/api';
 
 export function AuthCallback() {
     const [searchParams] = useSearchParams();
@@ -12,6 +11,15 @@ export function AuthCallback() {
     useEffect(() => {
         const handleCallback = async () => {
             const token = searchParams.get('token');
+            const error = searchParams.get('error');
+            const errorDescription = searchParams.get('error_description');
+
+            // Handle OAuth errors
+            if (error) {
+                showToast.error('Đăng nhập thất bại', errorDescription || error);
+                navigate('/login');
+                return;
+            }
 
             if (!token) {
                 showToast.error('Đăng nhập thất bại', 'Không nhận được token');
@@ -21,11 +29,12 @@ export function AuthCallback() {
 
             try {
                 // Get user info with the token
-                const response = await api.get('/auth/me', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
+                const data = await response.json();
 
-                const user = response.data.data;
+                const user = data.data;
                 login(user, token, ''); // No refresh token from OAuth yet
 
                 showToast.success('Đăng nhập thành công', `Chào mừng ${user.name}!`);

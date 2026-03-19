@@ -7,8 +7,8 @@ import { Plus, Search, MoreVertical, Edit, Trash2, CheckCircle, X, Sparkles } fr
 import { Button, Input, Badge, StatusBadge, PriorityBadge, SkeletonList, EmptyTasks, ErrorState } from '../components/ui';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { ConfirmDialog } from '../components/ui/confirm-dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/Select';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { AIScheduleModal } from '../components/ai-schedule/AIScheduleModal';
 import { showToast } from '../components/ui/toast';
 import { tasksService } from '../services/tasks.service';
@@ -160,35 +160,34 @@ export function Tasks() {
             </div>
 
             {/* Filters */}
-            <div className="bg-[var(--surface-1)] border border-[var(--border)] shadow-[var(--shadow-md)] rounded-xl backdrop-blur-xl p-4 dark:text-gray-900">
-                <div className="flex flex-col sm:flex-row gap-3 bg-gray-100">
+            <div className="bg-[var(--surface-1)] border border-[var(--border)] shadow-[var(--shadow-md)] rounded-xl backdrop-blur-xl p-4">
+                <div className="flex flex-col gap-3 rounded-lg bg-[var(--surface-3)] p-2 sm:flex-row">
                     <div className="flex-1">
                         <Input
                             placeholder="Tìm kiếm công việc..."
                             icon={
                                 <div className="w-5 h-5 justify-center">
-                                    <Search className="w-4 h-4 text-gray-700" strokeWidth={2} />
+                                    <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" strokeWidth={2} />
                                 </div>
                             }
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="text-gray-900 placeholder:text-gray-400"
                         />
                     </div>
-                    <div className="flex gap-2 ">
+                    <div className="flex gap-2">
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="w-[140px] bg-gray-100 dark:hover:bg-blue">
+                            <SelectTrigger className="w-[140px] bg-[var(--input-bg)] text-[var(--input-text)]">
                                 <SelectValue placeholder="Trạng thái" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem className='bg-gray-100' value="all">Tất cả</SelectItem>
+                                <SelectItem value="all">Tất cả</SelectItem>
                                 <SelectItem value="TODO">Chưa làm</SelectItem>
                                 <SelectItem value="IN_PROGRESS">Đang làm</SelectItem>
                                 <SelectItem value="DONE">Hoàn thành</SelectItem>
                             </SelectContent>
                         </Select>
-                        <Select value={priorityFilter} onValueChange={setPriorityFilter} >
-                            <SelectTrigger className="w-[140px] bg-gray-100">
+                        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                            <SelectTrigger className="w-[140px] bg-[var(--input-bg)] text-[var(--input-text)]">
                                 <SelectValue placeholder="Độ ưu tiên" />
                             </SelectTrigger>
                             <SelectContent>
@@ -320,9 +319,9 @@ export function Tasks() {
             {/* Delete Confirmation */}
             <ConfirmDialog
                 open={!!deleteTask}
-                onOpenChange={() => setDeleteTask(null)}
+                onClose={() => setDeleteTask(null)}
                 title="Xóa công việc"
-                description={`Bạn có chắc muốn xóa "${deleteTask?.title}"? Hành động này không thể hoàn tác.`}
+                message={`Bạn có chắc muốn xóa "${deleteTask?.title}"? Hành động này không thể hoàn tác.`}
                 confirmText="Xóa"
                 variant="danger"
                 loading={deleteMutation.isPending}
