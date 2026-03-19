@@ -2,7 +2,7 @@
 // https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -294,7 +294,7 @@ model GpsRoute {
 model DailyActivity {
   id            String    @id @default(uuid())
   userId        String
-  date          DateTime  @db.Date
+  date          DateTime
   steps         Int       @default(0)
   distance      Float     @default(0)
   calories      Int       @default(0)
