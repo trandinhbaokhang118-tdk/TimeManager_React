@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import type { ElementType } from 'react';
 import {
     CheckCircle2,
     Clock,
@@ -31,12 +32,13 @@ export function Dashboard() {
 
     const { data: tasksData, isLoading: tasksLoading } = useQuery({
         queryKey: ['tasks', { limit: 10, sortBy: 'dueAt', sortOrder: 'asc', status: 'TODO' }],
-        queryFn: () => tasksService.getAll({
-            limit: 10,
-            sortBy: 'dueAt',
-            sortOrder: 'asc',
-            status: 'TODO',
-        }),
+        queryFn: () =>
+            tasksService.getAll({
+                limit: 10,
+                sortBy: 'dueAt',
+                sortOrder: 'asc',
+                status: 'TODO',
+            }),
     });
 
     const { data: focusStats } = useQuery({
@@ -56,46 +58,44 @@ export function Dashboard() {
     }
 
     return (
-        <div className="space-y-6 pb-20 md:pb-0">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="page-shell space-y-6 pb-20 md:pb-0">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-2xl font-bold text-[var(--text)]">
                         {greeting()}, {user?.name?.split(' ')[0]} 👋
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="mt-1 text-[var(--text-2)]">
                         Hôm nay là {formatDate(new Date(), { weekday: 'long', day: 'numeric', month: 'long' })}
                     </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                     <Button
                         variant="outline"
                         onClick={() => setShowAISchedule(true)}
-                        className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
+                        className="border-[var(--surface-highlight-border)] bg-[var(--surface-highlight)] text-[var(--primary)] hover:bg-[var(--surface-3)] hover:text-[var(--primary)]"
                     >
-                        <Sparkles className="w-4 h-4 mr-2 text-purple-600 dark:text-purple-400" />
-                        <span className="text-purple-600 dark:text-purple-400">AI Sắp xếp</span>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        AI sắp xếp
                     </Button>
-                    <Button variant="outline" asChild className="text-gray-900 dark:text-white">
-                        <Link to="/calendar">
-                            <Calendar className="w-4 h-4 mr-2" />
+                    <Button variant="outline" asChild>
+                        <Link to="/app/calendar">
+                            <Calendar className="mr-2 h-4 w-4" />
                             Xem lịch
                         </Link>
                     </Button>
-                    <Button asChild className="text-gray-900 dark:text-white">
-                        <Link to="/focus">
-                            <Timer className="w-4 h-4 mr-2" />
-                            Bắt đầu Focus
+                    <Button asChild>
+                        <Link to="/app/focus">
+                            <Timer className="mr-2 h-4 w-4" />
+                            Bắt đầu focus
                         </Link>
                     </Button>
                 </div>
             </div>
 
-            {/* Stats Cards */}
             {statsLoading ? (
                 <SkeletonStats count={4} />
             ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     <StatCard
                         title="Việc hôm nay"
                         value={stats?.tasksDueToday || 0}
@@ -116,58 +116,50 @@ export function Dashboard() {
                         color="green"
                     />
                     <StatCard
-                        title="Giờ Focus tuần này"
+                        title="Giờ focus tuần này"
                         value={focusStats?.totalHours || 0}
                         suffix="h"
                         icon={TrendingUp}
-                        color="purple"
+                        color="primary"
                     />
                 </div>
             )}
 
-            {/* Main Content Grid */}
-            <div className="grid lg:grid-cols-3 gap-6">
-                {/* Today's Plan */}
-                <div className="lg:col-span-2 space-y-4">
+            <div className="grid gap-6 lg:grid-cols-3">
+                <div className="space-y-4 lg:col-span-2">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Kế hoạch hôm nay
-                        </h2>
+                        <h2 className="text-lg font-semibold text-[var(--text)]">Kế hoạch hôm nay</h2>
                         <Link
-                            to="/tasks"
-                            className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                            to="/app/tasks"
+                            className="flex items-center gap-1 text-sm text-[var(--primary)] transition-colors hover:text-[var(--text)]"
                         >
                             Xem tất cả
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="h-4 w-4" />
                         </Link>
                     </div>
 
-                    <div className=" dark:bg-[#1A2942]  border border-gray-200 dark:border-blue-900/50 shadow-md rounded-xl divide-y divide-gray-100 dark:divide-blue-900/20">
+                    <div className="surface-panel overflow-hidden divide-y divide-[var(--divider)]">
                         {tasksLoading ? (
-                            <div className="p-4 space-y-3">
+                            <div className="space-y-3 p-4">
                                 {[1, 2, 3].map((i) => (
-                                    <div key={i} className="animate-pulse flex gap-3">
-                                        <div className="w-5 h-5 rounded bg-gray-200 dark:bg-blue-900/30" />
+                                    <div key={i} className="flex gap-3">
+                                        <div className="skeleton h-5 w-5 rounded-full" />
                                         <div className="flex-1 space-y-2">
-                                            <div className="h-4 bg-gray-200 dark:bg-blue-900/30 rounded w-3/4" />
-                                            <div className="h-3 bg-gray-200 dark:bg-blue-900/30 rounded w-1/2" />
+                                            <div className="skeleton h-4 w-3/4 rounded" />
+                                            <div className="skeleton h-3 w-1/2 rounded" />
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         ) : tasksData?.data && tasksData.data.length > 0 ? (
-                            tasksData.data.map((task) => (
-                                <TaskItem key={task.id} task={task} />
-                            ))
+                            tasksData.data.map((task) => <TaskItem key={task.id} task={task} />)
                         ) : (
                             <div className="p-8 text-center">
-                                <Sparkles className="w-12 h-12 text-gray-300 dark:text-blue-400/30 mx-auto mb-3" />
-                                <p className="text-gray-500 dark:text-gray-300 mb-4">
-                                    Chưa có công việc nào cho hôm nay
-                                </p>
-                                <Button asChild size="sm" className='text-gray-900'>
-                                    <Link to="/tasks">
-                                        <Plus className="w-4 h-4 mr-1 text-gray-900" />
+                                <Sparkles className="mx-auto mb-3 h-12 w-12 text-[var(--text-3)]" />
+                                <p className="mb-4 text-[var(--text-2)]">Chưa có công việc nào cho hôm nay</p>
+                                <Button asChild size="sm">
+                                    <Link to="/app/tasks">
+                                        <Plus className="mr-1 h-4 w-4" />
                                         Tạo công việc
                                     </Link>
                                 </Button>
@@ -176,35 +168,25 @@ export function Dashboard() {
                     </div>
                 </div>
 
-                {/* Right Sidebar */}
                 <div className="space-y-6">
-                    {/* Quick Actions */}
-                    <div className=" dark:bg-[#1A2942] border border-gray-200 dark:border-blue-900/50 shadow-md rounded-xl p-4 transition-all hover:border-blue-500/40">
-                        <h3 className="font-medium mb-3 text-gray-900 dark:text-white">
-                            Thao tác nhanh
-                        </h3>
-
+                    <div className="surface-panel p-4">
+                        <h3 className="mb-3 font-medium text-[var(--text)]">Thao tác nhanh</h3>
                         <div className="space-y-2">
-                            <QuickAction icon={Plus} label="Tạo công việc mới" to="/tasks?new=true" />
-                            <QuickAction icon={Calendar} label="Lên lịch công việc" to="/calendar" />
-                            <QuickAction icon={Timer} label="Bắt đầu Pomodoro" to="/focus" />
+                            <QuickAction icon={Plus} label="Tạo công việc mới" to="/app/tasks?new=true" />
+                            <QuickAction icon={Calendar} label="Lên lịch công việc" to="/app/calendar" />
+                            <QuickAction icon={Timer} label="Bắt đầu Pomodoro" to="/app/focus" />
                         </div>
                     </div>
 
-
-
-                    {/* Productivity Tips */}
-                    <div className="bg-gradient-to-br from-[#12C2FF]/10 via-[#3B82F6]/10 to-[#8B5CF6]/10 border border-[var(--primary)]/20 shadow-[var(--shadow-md)] rounded-xl backdrop-blur-xl p-4">
-                        <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-gradient-to-r from-[#12C2FF] via-[#3B82F6] to-[#8B5CF6] text-white shadow-lg">
-                                <Sparkles className="w-4 h-4" />
+                    <div className="challenge-banner p-4">
+                        <div className="relative z-10 flex items-start gap-3">
+                            <div className="rounded-lg bg-[image:var(--primary-gradient)] p-2 text-[var(--btn-primary-text)] shadow-[var(--primary-glow)]">
+                                <Sparkles className="h-4 w-4" />
                             </div>
                             <div>
-                                <h3 className="font-medium text-gray-900 dark:text-white mb-1">
-                                    Mẹo năng suất
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300">
-                                    Hãy bắt đầu ngày mới bằng việc hoàn thành công việc khó nhất trước!
+                                <h3 className="mb-1 font-medium text-[var(--text)]">Mẹo năng suất</h3>
+                                <p className="text-sm text-[var(--text-2)]">
+                                    Hãy bắt đầu ngày mới bằng việc hoàn thành công việc khó nhất trước.
                                 </p>
                             </div>
                         </div>
@@ -212,101 +194,94 @@ export function Dashboard() {
                 </div>
             </div>
 
-            {/* AI Schedule Modal */}
             <AIScheduleModal open={showAISchedule} onOpenChange={setShowAISchedule} />
         </div>
     );
 }
 
-// Stat Card Component
 interface StatCardProps {
     title: string;
     value: number;
     suffix?: string;
-    icon: React.ElementType;
-    color: 'blue' | 'red' | 'green' | 'purple';
+    icon: ElementType;
+    color: 'blue' | 'red' | 'green' | 'primary';
     alert?: boolean;
 }
 
 function StatCard({ title, value, suffix, icon: Icon, color, alert }: StatCardProps) {
     const colors = {
-        blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
-        red: 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400',
-        green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
-        purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+        blue: 'bg-info-var',
+        red: 'bg-danger-var',
+        green: 'bg-success-var',
+        primary: 'border border-[var(--surface-highlight-border)] bg-[var(--surface-highlight)] text-[var(--primary)]',
     };
 
     return (
-        <div className={cn(
-            ' dark:bg-[#1A2942] border border-gray-200 dark:border-blue-900/50 shadow-md rounded-xl p-4 transition-all hover:shadow-lg hover:-translate-y-1',
-            alert && 'ring-2 ring-red-500 ring-offset-2 dark:ring-offset-gray-900'
-        )}>
-            <div className="flex items-center justify-between mb-3">
-                <div className={cn('p-2 rounded-lg', colors[color])}>
-                    <Icon className="w-5 h-5" />
+        <div
+            className={cn(
+                'surface-card-hover p-4',
+                alert && 'ring-2 ring-red-500 ring-offset-2 ring-offset-[var(--bg-body)]'
+            )}
+        >
+            <div className="mb-3 flex items-center justify-between">
+                <div className={cn('rounded-lg p-2', colors[color])}>
+                    <Icon className="h-5 w-5" />
                 </div>
                 {alert && (
-                    <span className="flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                    <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-red-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
                     </span>
                 )}
             </div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {value}{suffix}
+            <p className="text-2xl font-bold text-[var(--text)]">
+                {value}
+                {suffix}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{title}</p>
+            <p className="text-sm text-[var(--text-2)]">{title}</p>
         </div>
     );
 }
 
-// Task Item Component
 function TaskItem({ task }: { task: Task }) {
     const overdue = task.status !== 'DONE' && isOverdue(task.dueAt);
 
     return (
         <Link
-            to={`/tasks?id=${task.id}`}
-            className="flex items-start gap-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+            to={`/app/tasks?id=${task.id}`}
+            className="flex items-start gap-3 p-4 transition-colors hover:bg-[var(--surface-3)]"
         >
             <div
                 className={cn(
-                    'w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5',
+                    'mt-0.5 h-5 w-5 flex-shrink-0 rounded-full border-2',
                     task.status === 'DONE'
-                        ? 'bg-green-500 border-green-500'
+                        ? 'border-green-500 bg-green-500'
                         : overdue
-                            ? 'border-red-500'
-                            : 'border-gray-300 dark:border-gray-600'
+                          ? 'border-red-500'
+                          : 'border-[var(--border-strong)]'
                 )}
             >
-                {task.status === 'DONE' && (
-                    <CheckCircle2 className="w-full h-full text-white p-0.5" />
-                )}
+                {task.status === 'DONE' && <CheckCircle2 className="h-full w-full p-0.5 text-white" />}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
                 <p
                     className={cn(
-                        'font-medium truncate',
-                        task.status === 'DONE'
-                            ? 'text-gray-400 line-through'
-                            : 'text-gray-900 dark:text-white'
+                        'truncate font-medium',
+                        task.status === 'DONE' ? 'text-[var(--text-3)] line-through' : 'text-[var(--text)]'
                     )}
                 >
                     {task.title}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="mt-1 flex items-center gap-2">
                     {task.dueAt && (
-                        <span
-                            className={cn(
-                                'text-xs',
-                                overdue ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
-                            )}
-                        >
+                        <span className={cn('text-xs', overdue ? 'text-red-500' : 'text-[var(--text-2)]')}>
                             {formatDate(task.dueAt, { hour: '2-digit', minute: '2-digit' })}
                         </span>
                     )}
                     {task.priority === 'HIGH' && (
-                        <Badge variant="danger" className="text-xs py-0">Cao</Badge>
+                        <Badge variant="danger" className="py-0 text-xs">
+                            Cao
+                        </Badge>
                     )}
                 </div>
             </div>
@@ -314,17 +289,18 @@ function TaskItem({ task }: { task: Task }) {
     );
 }
 
-// Quick Action Component
-function QuickAction({ icon: Icon, label, to }: { icon: React.ElementType; label: string; to: string }) {
+function QuickAction({ icon: Icon, label, to }: { icon: ElementType; label: string; to: string }) {
     return (
         <Link
             to={to}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-blue-500 dark:hover:bg-blue-900/30 transition-colors group"
+            className="group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[var(--surface-highlight)]"
         >
-            <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-800/50 transition-colors">
-                <Icon className="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-300" />
+            <div className="rounded-lg bg-[var(--surface-3)] p-2 transition-colors group-hover:bg-[var(--surface-highlight)]">
+                <Icon className="h-4 w-4 text-[var(--text-2)] transition-colors group-hover:text-[var(--primary)]" />
             </div>
-            <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">{label}</span>
+            <span className="text-sm text-[var(--text-2)] transition-colors group-hover:text-[var(--text)]">
+                {label}
+            </span>
         </Link>
     );
 }
